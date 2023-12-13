@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App with Timer</title>
+  <style>
+     body{
+        height: 100vh;
+        background-color: deeppink;
+     }
+    #quiz-container {
+      max-width: 600px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div id="quiz-container">
+  <h1>Quiz App</h1>
+  <p id="question"></p>
+  <div id="options"></div>
+  <p id="timer">Time: <span id="time">10</span> seconds</p>
+  <button id="submit-btn">Submit</button>
+</div>
+
+<script>
+const quizData = [
+  {
+    question :
+        "Which of the following tag is used to insert a line-break in HTML?",
+        options: ["<br>", "<a>", "<b>"],
+        correctAnswer: "<br>"
+  },
+  {
+    question: "What is the largest planet in our solar system?",
+    options: ["Mars", "Jupiter", "Saturn", "Earth"],
+    correctAnswer: "Jupiter"
+  },
+  {
+    question: "HTML stands for?",
+        options: ["HighText Machine Language",
+            "HyperText and links Markup Language",
+            "HyperText Markup Language"],
+        correctAnswer: "HyperText Markup Language"
+  },
+  {
+    question : 
+        "Which of the following tag is used for inserting the largest heading in HTML?",
+        options: ["<h3>", "<h1>", "<h2>"],
+        correctAnswer: "<h1>"
+  },
+  {
+    question :
+        "What is my Last Name?",
+        options: ["Aboga", "Mente", "Mogas"],
+        correctAnswer: "Mente"
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let timer;
+
+function startQuiz() {
+  displayQuestion();
+  startTimer();
+}
+
+function displayQuestion() {
+  const questionElement = document.getElementById("question");
+  const optionsElement = document.getElementById("options");
+
+  questionElement.textContent = quizData[currentQuestion].question;
+
+  optionsElement.innerHTML = "";
+
+  quizData[currentQuestion].options.forEach((option, index) => {
+    const optionElement = document.createElement("div");
+    optionElement.className = "option";
+    optionElement.textContent = option;
+    optionElement.addEventListener("click", () => selectOption(option));
+
+    optionsElement.appendChild(optionElement);
+  });
+}
+
+function selectOption(selectedOption) {
+  if (selectedOption === quizData[currentQuestion].correctAnswer) {
+    score++;
+  }
+
+  nextQuestion();
+}
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion < quizData.length) {
+    displayQuestion();
+  } else {
+    endQuiz();
+  }
+}
+
+function startTimer() {
+  let timeLeft = 10; // Set the initial timer value in seconds
+
+  timer = setInterval(() => {
+    document.getElementById("time").textContent = timeLeft;
+
+    if (timeLeft === 0) {
+      endQuiz();
+    }
+
+    timeLeft--;
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timer);
+
+  const quizContainer = document.getElementById("quiz-container");
+  quizContainer.innerHTML = `<h2>Quiz completed!</h2>
+                             <p>Your score is ${score} out of ${quizData.length}</p>`;
+}
+
+document.getElementById("submit-btn").addEventListener("click", () => endQuiz());
+
+startQuiz();
+</script>
+
+</body>
+</html>
